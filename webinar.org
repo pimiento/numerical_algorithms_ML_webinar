@@ -1,0 +1,537 @@
+#+TITLE: Числовые алгоритмы. Матрицы. ML
+#+EMAIL: @pvavilin
+#+AUTHOR: @pvavilin
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:https://orgmode.org/org-info.js
+#+startup: beamer
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [smallest]
+#+LATEX_HEADER: \usetheme{default}
+#+LATEX_HEADER: \usecolortheme{crane}
+#+LATEX_HEADER: \RequirePackage{fancyvrb}
+#+LATEX_HEADER: \DefineVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\scriptsize}
+#+LaTeX_HEADER: \lstset{basicstyle=\scriptsize\ttfamily}
+#+LATEX_HEADER: \usepackage{xlop}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+OPTIONS: \n:t ^:nil num:nil ltoc:nil buttons:nil
+
+#+NAME: argsubst
+#+BEGIN_SRC emacs-lisp :var argument=1000 :exports none
+argument
+#+END_SRC
+
+* Умножение двух чисел
+  \begin{equation}
+  \opmul{5678}{1234}\qquad
+  \end{equation}
+  /Можно ли лучше?/
+* Умножение двоичных чисел
+  #+ATTR_LATEX: :width .8\textwidth
+  [[file:binary_multiplication.png]]
+* Алгоритм Каратцубы
+  #+NAME: karatsuba
+  #+BEGIN_SRC python :exports code
+    x = 5678
+    y = 1234
+
+    a = 56; b = 78
+    c = 12; d = 34
+  #+END_SRC
+* Алгоритм Каратцубы
+  #+NAME: pre_result
+  #+BEGIN_SRC python :exports code :noweb strip-export
+    <<karatsuba>>
+    # step1
+    step1 = a * c
+    # step2
+    step2 = b * d
+    # step3
+    a_b = a + b
+    c_d = c + d
+    step3 = a_b * c_d
+    # step4:
+    # step3 - step2 - step1
+    step4 = step3 - step2 - step1
+  #+END_SRC
+* Алгоритм Каратцубы
+  #+BEGIN_SRC python :exports both :noweb strip-export :results output
+    <<pre_result>>
+    line1 = step1 * 10**4
+    line2 = step2
+    line3 = step4 * 10**2
+    result = (
+        line1
+        + line2
+        + line3
+    )
+    print(result)
+  #+END_SRC
+
+  #+RESULTS:
+  : 7006652
+* Классическое умножение
+  \begin{equation}
+  \opmul{5678}{1234}\qquad
+  \end{equation}
+* Классическое умножение
+  #+NAME: classic_multiply
+  #+BEGIN_SRC python :exports none
+    import timeit
+    from typing import List
+    from functools import reduce
+
+
+    def make_equal_length(x: List[int], y: List[int]) -> List[List[int]]:
+        if len(x) > len(y):
+            y = [0] * (len(x) - len(y)) + y
+        elif len(x) < len(y):
+            x = [0] * (len(y) - len(x)) + x
+        return [x, y]
+
+    def sum_vectors(x: List[int], y: List[int]) -> List[int]:
+        x, y = make_equal_length(x, y)
+        result: List[int] = []
+        shift = 0
+        for idx in range(len(x)-1, -1, -1):
+            _x = x[idx]
+            _y = y[idx]
+            _result = (_x + _y) + shift
+            if _result > 9:
+                shift = 1
+                result.insert(0, _result % 10)
+            else:
+                shift = 0
+                result.insert(0, _result)
+        if shift > 0:
+            result.insert(0, shift)
+        return result
+
+    def diff_vectors(x: List[int], y: List[int]) -> List[int]:
+        x, y = make_equal_length(x, y)
+        result: List[int] = []
+        debt = 0
+        for idx in range(len(x)-1, -1, -1):
+            _x = x[idx]
+            _y = y[idx]
+            _result = (_x - _y) - debt
+            if _result < 0:
+                debt = 1
+                result.insert(0, _result + debt * 10)
+            else:
+                debt = 0
+                result.insert(0, _result)
+        return result
+
+    def vectorize(x: int) -> List[int]:
+        return [int(_) for _ in str(x)]
+
+    def devectorize(x: List[int]) -> int:
+        return int(''.join(str(_) for _ in x))
+
+    def classic(x: int, y: int) -> int:
+        temp_results: List[List[int]] = [[] for _ in range(len(str(y)))]
+        _x = vectorize(x)
+        _y = vectorize(y)
+        for idx, i in enumerate(_y[::-1]):
+            shift = 0
+            temp_results[idx] += [0] * idx
+            for j in _x[::-1]:
+                temp = (i * j) + shift
+                shift = temp // 10
+                temp_results[idx].insert(0, temp % 10)
+        return devectorize(reduce(sum_vectors, temp_results))
+  #+END_SRC
+  #+NAME: big_numbers
+  #+BEGIN_SRC python :exports none
+    big_x = int(
+        "31415926535897932384626433832795"
+        "02884197169399375105820974944592"
+    )
+    big_y = int(
+        "27182818284590452353602874713526"
+        "62497757247093699959574966967627"
+    )
+  #+END_SRC
+  #+BEGIN_SRC python :exports both :noweb strip-export :results output
+    <<classic_multiply>>
+    print(classic(1234, 5678))
+  #+END_SRC
+
+  #+RESULTS:
+  : 7006652
+
+  #+BEGIN_SRC python :exports code :tangle classic_multiply.py :shebang "#!/usr/bin/env python3" :noweb strip-export
+    <<classic_multiply>>
+    <<big_numbers>>
+    print(timeit.timeit(
+        "classic(1234, 5678) == 7006652",
+        globals=globals()
+    ))
+    # print(timeit.timeit(
+    #     f"classic({big_x}, {big_y})",
+    #     globals=globals()
+    # ))
+  #+END_SRC
+
+* Алгоритм Каратцубы
+  #+BEGIN_SRC python :exports none :noweb strip-export :tangle karatsuba_multiply.py :shebang "#!/usr/bin/env python3"
+    import math
+    <<classic_multiply>>
+
+    def divider(num: List[int]) -> List[List[int]]:
+        return [num[:len(num) // 2], num[len(num) // 2:]]
+
+    def karatsuba(x: int, y: int) -> int:
+        def _karatsuba(_x: List[int], _y: List[int]) -> List[int]:
+            x, y = make_equal_length(_x, _y)
+            if len(x) == 1:
+                return vectorize(x[0] * y[0])
+            a, b = divider(x)
+            c, d = divider(y)
+            step1 = _karatsuba(a, c)
+            step2 = _karatsuba(b, d)
+            step3 = _karatsuba(sum_vectors(a, b), sum_vectors(c, d))
+            step4 = diff_vectors(diff_vectors(step3, step2), step1)
+            line1 = step1 + [0] * len(x)
+            line2 = step2
+            line3 = step4 + [0] * math.ceil(len(x) / 2)
+            result = sum_vectors(sum_vectors(line1, line2), line3)
+            return result
+        return devectorize(_karatsuba(vectorize(x), vectorize(y)))
+
+    print(karatsuba(
+        1234,
+        5678
+    ))
+
+    assert karatsuba(1234, 5678) == 7006652
+    print(timeit.timeit(
+        "karatsuba(1234, 5678) == 7006652",
+        globals=globals()
+    ))
+    # print(timeit.timeit(
+    #     f"karatsuba({big_x}, {big_y})",
+    #     globals=globals()
+    # ))
+  #+END_SRC
+
+
+  #+NAME: karatsuba_str_multiply
+  #+BEGIN_SRC python :exports none
+    import timeit
+
+
+    def karatsuba(x,y):
+        """Function to multiply 2 numbers in a more efficient manner than the grade school algorithm"""
+        if len(str(x)) == 1 or len(str(y)) == 1:
+            return x*y
+        else:
+            n = max(len(str(x)), len(str(y)))
+            nby2 = n // 2
+
+            a = x // 10**(nby2)
+            b = x % 10**(nby2)
+            c = y // 10**(nby2)
+            d = y % 10**(nby2)
+            ac = karatsuba(a, c)
+            bd = karatsuba(b, d)
+            ad_plus_bc = karatsuba(a+b,c+d) - ac - bd
+
+            # this little trick, writing n as 2*nby2 takes care of both even and odd n
+            prod = ac * 10**(2*nby2) + (ad_plus_bc * 10**nby2) + bd
+
+            return prod
+
+    print(timeit.timeit(
+       "assert karatsuba(1234, 5678) == 7006652",
+       globals=globals()
+    ))
+  #+END_SRC
+  #+BEGIN_SRC python :exports code :tangle karatsuba_str_multiply.py :shebang "#!/usr/bin/env python3" :noweb strip-export
+    <<classic_multiply>>
+    <<karatsuba_str_multiply>>
+    <<big_numbers>>
+
+    print(timeit.timeit(
+        "karatsuba(1234, 5678) == 7006652",
+        globals=globals()
+    ))
+    # print(timeit.timeit(
+    #     f"karatsuba({big_x}, {big_y})",
+    #     globals=globals()
+    # ))
+  #+END_SRC
+
+* Умножение матриц
+  \begin{equation}
+  \left[ \begin{array}{ccc} A & B \\ C & D \\ \end{array} \right]
+  \times
+  \left[ \begin{array}{ccc} E & F \\ G & H \\ \end{array} \right]
+  = \left[ \begin{array}{ccc} AE + BG & AF + BH \\ CE + DG & CF + DH \\ \end{array} \right]
+  \end{equation}
+
+* Умножение матриц
+  #+BEGIN_SRC python :exports code
+    def mxm(A, X):
+      n = len(A)    # A: n×m
+      m = len(A[0])
+      p = len(X[0]) # X: m×p
+      B = [[0] * p] * n
+      for i in range(n):
+        for j in range(p):
+          for k in range(m):
+            B[i][j] += A[i][k]*X[k][j]
+      return B
+  #+END_SRC
+  *Где ошибка в этом коде?*
+
+* Умножение матриц
+  #+NAME: matrix_multiply
+  #+BEGIN_SRC python :exports code
+    def mxm(A, X):
+      n = len(A)    # A: n×m
+      m = len(A[0])
+      p = len(X[0]) # X: m×p
+      B = [[0] * p for _ in range(n)]
+      for i in range(n):
+        for j in range(p):
+          for k in range(m):
+            B[i][j] += A[i][k]*X[k][j]
+      return B
+  #+END_SRC
+  #+BEGIN_SRC python :exports none :noweb strip-export :tangle matrix_multiply.py :shebang "#!/usr/bin/env python3"
+    import numpy as np
+    <<matrix_multiply>>
+
+    A = [
+      [1, 2, 3, 4],
+      [1, 2, 3, 4],
+      [1, 2, 3, 4],
+      [1, 2, 3, 4]
+    ]
+
+    B = [
+        [5, 5, 5, 5],
+        [6, 6, 6, 6],
+        [7, 7, 7, 7],
+        [8, 8, 8, 8]
+    ]
+
+    result = mxm(A, B)
+    print(result)
+
+    np_result = np.dot(np.array(A), np.array(B))
+    assert (np_result == np.array(result)).all(), [np_result, np.array(result)]
+  #+END_SRC
+
+* Умножение матриц
+  #+BEGIN_CENTER
+  $O(n^{3})$
+  /Можно ли лучше?/
+  #+END_CENTER
+
+* Алгоритм Штрассена
+  \begin{normalsize}
+  \left[ \begin{array}{cccc} 11 & 12 & 13 & 14 \\ 21 & 22 & 23 & 24 \\ 31 & 32 & 33 & 34 \\ 41 & 42 & 43 & 44 \\ \end{array} \right] =
+  \left[ \begin{array}{cc} A & B \\ C & D \\ \end{array} \right]
+  \end{normalsize}
+  \begin{normalsize}
+  \left[ \begin{array}{cccc} 11 & 21 & 31 & 41 \\ 12 & 22 & 32 & 42 \\ 13 & 23 & 33 & 43 \\ 14 & 24 & 34 & 44 \\ \end{array} \right] =
+  \left[ \begin{array}{cc} E & F \\ G & H \\ \end{array} \right]
+  \end{normalsize}
+
+* Алгоритм Штрассена
+  \begin{array}{l}
+  P_{1} = A(F - H), \\
+  P_{2} = (A + B)H, \\
+  P_{3} = (C + D)E, \\
+  P_{4} = D(G - E), \\
+  P_{5} = (A + D)(E + H), \\
+  P_{6} = (B - D)(G + H), \\
+  P_{7} = (A - C)(E + F) \\
+  \end{array}
+
+* Алгоритм Штрассена
+  \begin{footnotesize}
+  \left[ \begin{array}{cc} AE+BG & AF+BH \\ CE+DG & CF+DH \end{array} \right] =
+  \left[ \begin{array}{ll} P_{5} + P_{4} - P_{2} + P_{6} & P_{1} + P_{2} \\ P_{3} + P_{4} & P_{1} + P_{5} - P_{3} + P_{7} \end{array} \right]
+  \end{footnotesize}
+
+* векторизация
+  - Большинство операций процессора это SISD: Single Instruction Single Data
+  - Процессор может поддерживать специальные регистры для __[[https://ru.wikipedia.org/wiki/SIMD][SIMD]]__: Single Instruction Multiple Data
+
+* векторизация
+  #+ATTR_LATEX: :center t :mode table :align l|l|l|l
+  | 0     | 1        | 2        | 3        |
+  | a[0]= | not used | not used | not used |
+  | b[0]+ | not used | not used | not used |
+  | c[0]  | not used | not used | not used |
+
+* векторизация
+  #+ATTR_LATEX: :center t :mode table :align l|l|l|l
+  | 0     | 1     | 2     | 3     |
+  | a[0]= | a[1]= | a[2]= | a[3]= |
+  | b[0]+ | b[1]+ | b[2]+ | b[3]+ |
+  | c[0]  | c[1]  | c[2]  | c[3]  |
+
+* векторизация
+  #+NAME: vecexample
+  #+BEGIN_SRC cpp :exports none :tangle vecexample.cpp
+    #include <cstdlib>
+    #include <iostream>
+    #include <cmath>
+    #include <iomanip>
+    #include "time.h"
+
+    using namespace std; // note use of namespace
+    int main (int argc, char* argv[]) {
+        // read in dimension of square matrix
+        int n = atoi(argv[1]);
+        double s = 1.0/sqrt( (double) n);
+        double *a, *b, *c;
+        // Start timing
+        clock_t start, finish;
+        start = clock();
+        // Allocate space for the vectors to be used
+        a = new double [n]; b = new double [n]; c = new double [n];
+        // Define parallel region
+        // Set up values for vectors  a and b
+        for (int i=0; i<n; i++){
+            double angle = 2.0*M_PI*i/ (( double ) n);
+            a[i] = s*(sin(angle) + cos(angle));
+            b[i] =  s*sin(2.0*angle);
+            c[i] = 0.0;
+        }
+        // Then perform the vector addition
+        for (int i=0; i<n; i++){
+            c[i] += a[i]+b[i];
+        }
+        // Compute now the norm-2
+        double Norm2 = 0.0;
+        for (int i=0; i<n; i++){
+            Norm2  += c[i]*c[i];
+        }
+        finish = clock();
+        double timeused = (double) (finish - start)/(CLOCKS_PER_SEC );
+        cout << setiosflags(ios::showpoint | ios::uppercase);
+        cout << setprecision(5) << setw(20) << "Time used for norm computation=" << timeused  << endl;
+        cout << "  Norm-2  = " << Norm2 << endl;
+        // Free up space
+        delete[] a;
+        delete[] b;
+        delete[] c;
+        return 0;
+    }
+  #+END_SRC
+  - Без векторизованных операций
+  #+BEGIN_SRC shell :exports both :results output :noweb yes
+    g++ -o novec vecexample.cpp
+    echo "Без векторизации"
+    ./novec <<argsubst()>>
+  #+END_SRC
+
+  #+RESULTS:
+  : Без векторизации
+  : Time used  for norm computation=8.5000E-05
+  :   Norm-2  = 1.5000
+  #+BEGIN_SRC shell :exports both :results output :noweb yes
+    g++ -O3 -mavx2 -o vec vecexample.cpp
+    echo "Используя векторизацию"
+    ./vec <<argsubst()>>
+  #+END_SRC
+
+  #+RESULTS:
+  : Используя векторизацию
+  : Time used  for norm computation=7.3000E-05
+  :   Norm-2  = 1.5000
+
+* NumPy
+  #+NAME: numpy_before
+  #+BEGIN_SRC python :exports none
+    import sys
+    import time
+    import numpy as np
+
+    start = time.time()
+    n = int(sys.argv[1])
+    s = 1.0 / np.math.sqrt(n)
+  #+END_SRC
+
+  #+NAME: numpy_after
+  #+BEGIN_SRC python :exports none
+    finish = time.time()
+    time_used = finish - start
+    print(f"Time used for norm computation = {time_used:.5f}")
+    print(f"Norm-2 = {norm2:.5f}")
+  #+END_SRC
+
+  #+BEGIN_SRC python :exports code :tangle numpy_vec.py :shebang "#!/usr/bin/env python3" :noweb strip-export
+    <<numpy_before>>
+    _a = (
+        np.arange(n, dtype=float) * 2
+        ,* np.math.pi / n
+    )
+    a = s * (np.sin(_a) + np.cos(_a))
+    b = s * np.sin(2.0 * _a)
+    c = a + b
+    norm2 = np.sum(np.power(c, 2))
+    <<numpy_after>>
+  #+END_SRC
+
+  #+BEGIN_SRC shell :exports both :results output :noweb yes
+    ./numpy_vec.py <<argsubst()>>
+  #+END_SRC
+
+  #+RESULTS:
+  : Time used for norm computation = 0.00017
+  : Norm-2 = 1.50000
+
+* Логистическая регрессия
+  $z = w_{0}x + w_{1}x + \dots + w_{n}x + b$ \\
+  $a = \frac{1}{1+e^{-z}}$
+    #+BEGIN_SRC python :results file :exports results
+      import matplotlib
+      matplotlib.use("Agg")
+
+      import matplotlib.pyplot as plt
+      from scipy.special import expit
+      import numpy as np
+
+      #define range of x-values
+      x = np.linspace(-10, 10, 100)
+
+      #calculate sigmoid function for each x-value
+      y = expit(x)
+
+      #create plot
+      plt.plot(x, y)
+      plt.xlabel('z', loc="right")
+      plt.ylabel("σ(z)", loc="top")
+      ax = plt.gca()
+      ax.spines[["left", "bottom"]].set_position(("data", 0))
+      ax.spines[["top", "right"]].set_visible(False)
+      ax.plot(1, 0, ">k", transform=ax.get_yaxis_transform(), clip_on=False)
+      ax.plot(0, 1, "^k", transform=ax.get_xaxis_transform(), clip_on=False)
+
+      #display plot
+      fname = "sigmoid_fun.png"
+      plt.savefig(fname)
+
+      return fname
+    #+END_SRC
+
+    #+attr_latex: :width 160px
+    #+CAPTION: sigmoid
+    #+RESULTS:
+    [[file:sigmoid_fun.png]]
+* Обучение
+  Чтобы минимизировать ошибку в ответах будем искать минимум функции, вычисляя градиент (производную) для каждой переменной.
+  \begin{normalsize}
+  w = w - \dfrac{\partial w}{\partial x_{n}}
+  \end{normalsize}
+* Котики!
+  __[[https://github.com/pimiento/numerical_algorithms_ML_webinar/blob/master/nn_model.py][GitHub]]__
+* Tensorflow
+* Вопросы-ответы
+  #+ATTR_LATEX: :width .6\textwidth
+  [[file:///home/pimiento/yap/questions.jpg]]
