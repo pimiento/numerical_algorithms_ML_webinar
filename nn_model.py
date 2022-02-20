@@ -22,8 +22,10 @@ def predict(X: np.ndarray, y: np.ndarray, params: Dict[str, np.ndarray]):
     m = X.shape[1]
     p = np.zeros((1,m))
 
+
     # Forward propagation
-    probas, _ = L_model_forward(X, params)
+    A1, _ = linear_activation_forward(X, parameters["W1"], parameters["b1"], "relu")
+    probas, _ = linear_activation_forward(A1, parameters["W2"], parameters["b2"], "sigmoid")
 
     # convert probas to 0/1 predictions
     for i in range(0, probas.shape[1]):

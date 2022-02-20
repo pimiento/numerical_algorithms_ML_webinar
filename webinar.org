@@ -15,7 +15,7 @@
 #+OPTIONS: \n:t ^:nil num:nil ltoc:nil buttons:nil
 
 #+NAME: argsubst
-#+BEGIN_SRC emacs-lisp :var argument=1000 :exports none
+#+BEGIN_SRC emacs-lisp :var argument=100000000 :exports none
 argument
 #+END_SRC
 
@@ -532,6 +532,7 @@ argument
 * Котики!
   __[[https://github.com/pimiento/numerical_algorithms_ML_webinar/blob/master/nn_model.py][GitHub]]__
 * Tensorflow
+  __[[https://colab.research.google.com/drive/1peolUQzHOVC4QVELMCBO1zluc1-pNsma?usp=sharing][Colab]]__
 * Вопросы-ответы
   #+ATTR_LATEX: :width .6\textwidth
   [[file:///home/pimiento/yap/questions.jpg]]

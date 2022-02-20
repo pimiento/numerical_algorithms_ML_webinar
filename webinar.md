@@ -1,31 +1,32 @@
-- [Умножение двух чисел](#org49f8ad5)
-- [Умножение двоичных чисел](#org3ed2bf3)
-- [Алгоритм Каратцубы](#org23fbe11)
-- [Алгоритм Каратцубы](#org2d4a198)
-- [Алгоритм Каратцубы](#org4ac9dd2)
-- [Классическое умножение](#org85b21b9)
-- [Классическое умножение](#org3471451)
-- [Алгоритм Каратцубы](#org6c4212f)
-- [Умножение матриц](#org52298cc)
-- [Умножение матриц](#orgf32a40b)
-- [Умножение матриц](#orgdea43d4)
-- [Умножение матриц](#org3fb355b)
-- [Алгоритм Штрассена](#orgc0d5f06)
-- [Алгоритм Штрассена](#orgf742a41)
-- [Алгоритм Штрассена](#org0e9ea0f)
-- [векторизация](#orgd0a7402)
-- [векторизация](#orga850663)
-- [векторизация](#org8a88bb8)
-- [векторизация](#orgcfaf45d)
-- [NumPy](#orgdfcedbd)
-- [Логистическая регрессия](#orgbb2f1f5)
-- [Обучение](#org3523cd3)
-- [Котики!](#org6b84ff0)
-- [Tensorflow](#org041adbd)
+- [Умножение двух чисел](#org04b2c5d)
+- [Умножение двоичных чисел](#orga15771b)
+- [Алгоритм Каратцубы](#orgf9dfedd)
+- [Алгоритм Каратцубы](#org3279310)
+- [Алгоритм Каратцубы](#org2e3f478)
+- [Классическое умножение](#orga07a5c4)
+- [Классическое умножение](#org3c5ecb2)
+- [Алгоритм Каратцубы](#org1b6b546)
+- [Умножение матриц](#orga7516a8)
+- [Умножение матриц](#org47809c7)
+- [Умножение матриц](#org15d561f)
+- [Умножение матриц](#org6b311cd)
+- [Алгоритм Штрассена](#orgf78680c)
+- [Алгоритм Штрассена](#orgbcf46c4)
+- [Алгоритм Штрассена](#org71d656e)
+- [векторизация](#orgabde5d0)
+- [векторизация](#org7a0c994)
+- [векторизация](#org7cd8741)
+- [векторизация](#orgbf2b236)
+- [NumPy](#org91d0691)
+- [Логистическая регрессия](#orgeee8e8f)
+- [Обучение](#orgc810060)
+- [Котики!](#org2b865b2)
+- [Tensorflow](#org35e2670)
+- [Вопросы-ответы](#org5406127)
 
 
 
-<a id="org49f8ad5"></a>
+<a id="org04b2c5d"></a>
 
 # Умножение двух чисел
 
@@ -36,14 +37,14 @@
 *Можно ли лучше?*
 
 
-<a id="org3ed2bf3"></a>
+<a id="orga15771b"></a>
 
 # Умножение двоичных чисел
 
 ![img](binary_multiplication.png)
 
 
-<a id="org23fbe11"></a>
+<a id="orgf9dfedd"></a>
 
 # Алгоритм Каратцубы
 
@@ -56,7 +57,7 @@ c = 12; d = 34
 ```
 
 
-<a id="org2d4a198"></a>
+<a id="org3279310"></a>
 
 # Алгоритм Каратцубы
 
@@ -76,7 +77,7 @@ step4 = step3 - step2 - step1
 ```
 
 
-<a id="org4ac9dd2"></a>
+<a id="org2e3f478"></a>
 
 # Алгоритм Каратцубы
 
@@ -96,7 +97,7 @@ print(result)
     7006652
 
 
-<a id="org85b21b9"></a>
+<a id="orga07a5c4"></a>
 
 # Классическое умножение
 
@@ -105,7 +106,7 @@ print(result)
 \end{equation}
 
 
-<a id="org3471451"></a>
+<a id="org3c5ecb2"></a>
 
 # Классическое умножение
 
@@ -130,7 +131,7 @@ print(timeit.timeit(
 ```
 
 
-<a id="org6c4212f"></a>
+<a id="org1b6b546"></a>
 
 # Алгоритм Каратцубы
 
@@ -150,7 +151,7 @@ print(timeit.timeit(
 ```
 
 
-<a id="org52298cc"></a>
+<a id="orga7516a8"></a>
 
 # Умножение матриц
 
@@ -162,7 +163,7 @@ print(timeit.timeit(
 \end{equation}
 
 
-<a id="orgf32a40b"></a>
+<a id="org47809c7"></a>
 
 # Умножение матриц
 
@@ -182,7 +183,7 @@ def mxm(A, X):
 **Где ошибка в этом коде?**
 
 
-<a id="orgdea43d4"></a>
+<a id="org15d561f"></a>
 
 # Умножение матриц
 
@@ -200,7 +201,7 @@ def mxm(A, X):
 ```
 
 
-<a id="org3fb355b"></a>
+<a id="org6b311cd"></a>
 
 # Умножение матриц
 
@@ -210,7 +211,7 @@ def mxm(A, X):
 </div>
 
 
-<a id="orgc0d5f06"></a>
+<a id="orgf78680c"></a>
 
 # Алгоритм Штрассена
 
@@ -225,7 +226,7 @@ def mxm(A, X):
 \end{normalsize}
 
 
-<a id="orgf742a41"></a>
+<a id="orgbcf46c4"></a>
 
 # Алгоритм Штрассена
 
@@ -240,7 +241,7 @@ P_{7} = (A - C)(E + F) \\
 \end{array}
 
 
-<a id="org0e9ea0f"></a>
+<a id="org71d656e"></a>
 
 # Алгоритм Штрассена
 
@@ -250,7 +251,7 @@ P_{7} = (A - C)(E + F) \\
 \end{footnotesize}
 
 
-<a id="orgd0a7402"></a>
+<a id="orgabde5d0"></a>
 
 # векторизация
 
@@ -258,7 +259,7 @@ P_{7} = (A - C)(E + F) \\
 -   Процессор может поддерживать специальные регистры для <span class="underline"><span class="underline">[SIMD](https://ru.wikipedia.org/wiki/SIMD)</span></span>: Single Instruction Multiple Data
 
 
-<a id="orga850663"></a>
+<a id="org7a0c994"></a>
 
 # векторизация
 
@@ -268,7 +269,7 @@ P_{7} = (A - C)(E + F) \\
 | c[0]  | not used | not used | not used |
 
 
-<a id="org8a88bb8"></a>
+<a id="org7cd8741"></a>
 
 # векторизация
 
@@ -278,7 +279,7 @@ P_{7} = (A - C)(E + F) \\
 | c[0]  | c[1]  | c[2]  | c[3]  |
 
 
-<a id="orgcfaf45d"></a>
+<a id="orgbf2b236"></a>
 
 # векторизация
 
@@ -287,25 +288,25 @@ P_{7} = (A - C)(E + F) \\
 ```shell
 g++ -o novec vecexample.cpp
 echo "Без векторизации"
-./novec 1000
+./novec 100000000
 ```
 
     Без векторизации
-    Time used for norm computation=8.6000E-05
+    Time used for norm computation=6.1366
       Norm-2  = 1.5000
 
 ```shell
 g++ -O3 -mavx2 -o vec vecexample.cpp
 echo "Используя векторизацию"
-./vec 1000
+./vec 100000000
 ```
 
     Используя векторизацию
-    Time used for norm computation=7.2000E-05
+    Time used for norm computation=5.0431
       Norm-2  = 1.5000
 
 
-<a id="orgdfcedbd"></a>
+<a id="org91d0691"></a>
 
 # NumPy
 
@@ -323,14 +324,14 @@ norm2 = np.sum(np.power(c, 2))
 ```
 
 ```shell
-./numpy_vec.py 1000
+./numpy_vec.py 100000000
 ```
 
-    Time used for norm computation = 0.00019
+    Time used for norm computation = 7.11729
     Norm-2 = 1.50000
 
 
-<a id="orgbb2f1f5"></a>
+<a id="orgeee8e8f"></a>
 
 # Логистическая регрессия
 
@@ -340,7 +341,7 @@ norm2 = np.sum(np.power(c, 2))
 ![img](sigmoid_fun.png "sigmoid")
 
 
-<a id="org3523cd3"></a>
+<a id="orgc810060"></a>
 
 # Обучение
 
@@ -351,13 +352,22 @@ w = w - \dfrac{\partial w}{\partial x_{n}}
 \end{normalsize}
 
 
-<a id="org6b84ff0"></a>
+<a id="org2b865b2"></a>
 
 # Котики!
 
 <span class="underline"><span class="underline">[GitHub](https://github.com/pimiento/numerical_algorithms_ML_webinar/blob/master/nn_model.py)</span></span>
 
 
-<a id="org041adbd"></a>
+<a id="org35e2670"></a>
 
 # Tensorflow
+
+<span class="underline"><span class="underline">[Colab](https://colab.research.google.com/drive/1peolUQzHOVC4QVELMCBO1zluc1-pNsma?usp=sharing)</span></span>
+
+
+<a id="org5406127"></a>
+
+# Вопросы-ответы
+
+![img](/home/pimiento/yap/questions.jpg)
