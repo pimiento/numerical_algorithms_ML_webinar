@@ -3,8 +3,8 @@ import sys
 import time
 import numpy as np
 
-start = time.time()
 n = int(sys.argv[1])
+start = time.time()
 s = 1.0 / np.math.sqrt(n)
 _a = (
     np.arange(n, dtype=float) * 2

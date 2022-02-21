@@ -12,7 +12,7 @@ int main (int argc, char* argv[]) {
     double *a, *b, *c;
     // Start timing
     clock_t start, finish;
-    start = clock();
+    start = clock();  // time.time()
     // Allocate space for the vectors to be used
     a = new double [n]; b = new double [n]; c = new double [n];
     // Define parallel region
@@ -32,7 +32,7 @@ int main (int argc, char* argv[]) {
     for (int i=0; i<n; i++){
         Norm2  += c[i]*c[i];
     }
-    finish = clock();
+    finish = clock();  // time.time()
     double timeused = (double) (finish - start)/(CLOCKS_PER_SEC );
     cout << setiosflags(ios::showpoint | ios::uppercase);
     cout << setprecision(5) << setw(20) << "Time used for norm computation=" << timeused  << endl;
